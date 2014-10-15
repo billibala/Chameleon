@@ -43,13 +43,14 @@ extern NSMutableArray *_allScreens;
         return toConvert;
     } else {
         // Go all the way through OSX screen coordinates.
-        NSPoint screenCoords = [[self.UIKitView window] convertBaseToScreen:[self.UIKitView convertPoint:NSPointFromCGPoint(toConvert) toView:nil]];
-        
+		NSPoint thePoint = [self.UIKitView convertPoint:NSPointFromCGPoint(toConvert) toView:nil];
+		NSRect screenRect = [self.UIKitView.window convertRectToScreen:NSMakeRect(thePoint.x, thePoint.y, 1.0, 1.0)];
+		
         if (toScreen) {
             // Now from there back to the toScreen's window's base
-            return NSPointToCGPoint([toScreen.UIKitView convertPoint:[[toScreen.UIKitView window] convertScreenToBase:screenCoords] fromView:nil]);
+            return NSPointToCGPoint([toScreen.UIKitView convertPoint:[toScreen.UIKitView.window convertRectFromScreen:screenRect].origin fromView:nil]);
         } else {
-            return NSPointToCGPoint(screenCoords);
+            return NSPointToCGPoint(screenRect.origin);
         }
     }
 }
@@ -59,17 +60,18 @@ extern NSMutableArray *_allScreens;
     if (fromScreen == self) {
         return toConvert;
     } else {
-        NSPoint screenCoords;
+		NSRect screenRect = CGRectMake(0.0, 0.0, 1.0, 1.0);
         
         if (fromScreen) {
             // Go all the way through OSX screen coordinates.
-            screenCoords = [[fromScreen.UIKitView window] convertBaseToScreen:[fromScreen.UIKitView convertPoint:NSPointFromCGPoint(toConvert) toView:nil]];
+			NSPoint thePoint = [fromScreen.UIKitView convertPoint:NSPointFromCGPoint(toConvert) toView:nil];
+			screenRect = [fromScreen.UIKitView.window convertRectToScreen:NSMakeRect(thePoint.x, thePoint.y, 1.0, 1.0)];
         } else {
-            screenCoords = NSPointFromCGPoint(toConvert);
+            screenRect.origin = NSPointFromCGPoint(toConvert);
         }
         
-        // Now from there back to the our screen
-        return NSPointToCGPoint([self.UIKitView convertPoint:[[self.UIKitView window] convertScreenToBase:screenCoords] fromView:nil]);
+        // Now from there back to the our screen[[self.UIKitView window] convertScreenToBase:screenCoords]
+        return NSPointToCGPoint([self.UIKitView convertPoint:[self.UIKitView.window convertRectFromScreen:screenRect].origin fromView:nil]);
     }
 }
 
