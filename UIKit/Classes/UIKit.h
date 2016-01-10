@@ -110,6 +110,19 @@
 #import "UIAppearance.h"
 #import "UITextInput.h"
 
+// solve Xcode 7 warning
+#import "AppKitIntegration.h"
+#import "UIActionSheetAppKitIntegration.h"
+#import "UIApplicationAppKitIntegration.h"
+#import "UIColorAppKitIntegration.h"
+#import "UIFontAppKitIntegration.h"
+#import "UIGestureRecognizerSubclass.h"
+#import "UIImageAppKitIntegration.h"
+#import "UIKitView.h"
+#import "UIResponderAppKitIntegration.h"
+#import "UIRoundedRectButton.h"
+#import "UIScreenAppKitIntegration.h"
+
 // non-standard imports
 #import "UIScrollWheelGestureRecognizer.h"
 
